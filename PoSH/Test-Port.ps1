@@ -9,7 +9,7 @@ The computer name or IP address to connect to.
 The TCP port to connect to
 
 .PARAMETER Timeout
-The timeout to use, default 2500
+The timeout to use in milliseconds, default 1000ms
 
 .EXAMPLE
 Test-Port www.google.co.uk 443
@@ -41,7 +41,7 @@ function Test-Port {
     param (
         [Parameter(Mandatory=$true,ValueFromPipeline=$true,Position=0)][string]$Target,
         [Parameter(Mandatory=$true,Position=1)][int]$Port,
-        [Parameter(Mandatory=$false)][int]$Timeout = 2500
+        [Parameter(Mandatory=$false)][int]$Timeout = 1000
     )
     process {
         $tcpobject = new-Object system.Net.Sockets.TcpClient 
