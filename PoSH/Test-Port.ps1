@@ -8,6 +8,9 @@ The computer name or IP address to connect to.
 .PARAMETER Port
 The TCP port to connect to
 
+.PARAMETER Timeout
+The timeout to use, default 2500
+
 .EXAMPLE
 Test-Port www.google.co.uk 443
 Connection successful!
@@ -37,7 +40,8 @@ function Test-Port {
 [CmdletBinding()] # see http://blogs.technet.com/b/heyscriptingguy/archive/2012/07/07/weekend-scripter-cmdletbinding-attribute-simplifies-powershell-functions.aspx
     param (
         [Parameter(Mandatory=$true,ValueFromPipeline=$true,Position=0)][string]$Target,
-        [Parameter(Mandatory=$true,Position=1)][int]$Port
+        [Parameter(Mandatory=$true,Position=1)][int]$Port,
+        [Parameter(Mandatory=$false)][int]$Timeout = 2500
     )
     process {
         $tcpobject = new-Object system.Net.Sockets.TcpClient 
@@ -47,7 +51,7 @@ function Test-Port {
         $connect = $tcpobject.BeginConnect( $target, $port, $null, $null ) 
     
         #Configure a timeout before quitting - time in milliseconds 
-        $wait = $connect.AsyncWaitHandle.WaitOne( 2500, $false ) 
+        $wait = $connect.AsyncWaitHandle.WaitOne( $timeout, $false ) 
     
         if ( -not $Wait ) {
             'Connection failed - timeout'
