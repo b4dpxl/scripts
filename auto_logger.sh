@@ -16,8 +16,8 @@ yes_or_no() {
         case $yn in
             [Yy]*) return 0 ;;  
             [Nn]*) return 1 ;;
-	    # default = "Y". Change return to "1" to make default "N"
-	    "") return 0 ;;
+            # default = "Y". Change return to "1" to make default "N"
+            "") return 0 ;;
         esac
     done
 }
