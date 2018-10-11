@@ -12,10 +12,12 @@ test "${SHELL_PROCESS}" = "script" && exit 0
 
 yes_or_no() {
     while true; do
-        read -p "$* [y/n]: " yn
+        read -p "$* [Y/n]: " yn
         case $yn in
-            [Yy]*) return 0  ;;  
-            [Nn]*) return  1 ;;
+            [Yy]*) return 0 ;;  
+            [Nn]*) return 1 ;;
+	    # default = "Y". Change return to "1" to make default "N"
+	    "") return 0 ;;
         esac
     done
 }
