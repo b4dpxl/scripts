@@ -4,7 +4,7 @@
 ## Put a call at the end of ~/.bashrc
 ## and update the LOG_FOLDER path below
 
-LOG_FOLDER=<PATH_TO_LOGS_FOLDER>
+LOG_FOLDER="PATH_TO_LOGS_FOLDER"
 
 SHELL_PROCESS=$(ps -o command= -p `ps -p $PPID -o ppid=` | awk '{print $1}')
 test "${SHELL_PROCESS}" = "script" && exit 0
