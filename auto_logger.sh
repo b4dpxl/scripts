@@ -6,9 +6,8 @@
 
 LOG_FOLDER="PATH_TO_LOGS_FOLDER"
 
-SHELL_PROCESS=$(ps -o command= -p `ps -p $PPID -o ppid=` | awk '{print $1}')
-test "${SHELL_PROCESS}" = "script" && exit 0
-#echo "Not logging yet"
+# end if in "script"
+if pstree -s $PPID | grep -qP "\bscript\b" ; then exit 0 ; fi
 
 yes_or_no() {
     while true; do
@@ -23,5 +22,7 @@ yes_or_no() {
 }
 
 RED=$(tput setaf 9)
+GRN=$(tput setaf 2)
 NC=$(tput sgr0)
-yes_or_no "${RED}Log this session?${NC}" && script -f ${LOG_FOLDER}/log_`date +'%Y%m%d_%H%M%S.%N'`.txt
+PROMPT="[${RED}** ${GRN}\\u${NC}@\\h \\W]\\$ "
+yes_or_no "${RED}Log this session?${NC}" && ( script -f ${LOG_FOLDER}/log_`date +'%Y%m%d_%H%M%S.%N'`.txt -c "source ~/.bashrc; env PS1='${PROMPT}' /bin/bash --norc" )
