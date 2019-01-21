@@ -5,6 +5,15 @@
 ## and update the LOG_FOLDER path below
 
 LOG_FOLDER="PATH_TO_LOGS_FOLDER"
+###
+# optional step. Update ~/.bashrc with this before the call to the logger script to update your prompt
+#       if pstree -s $PPID | grep -qP "\-script\b" ; then
+#               RED=$(tput setaf 9)
+#               GRN=$(tput setaf 2)
+#               NC=$(tput sgr0)
+#               export PS1="[\[${RED}\]** \[${GRN}\]\\u\[${NC}\]@\\h \\W]\\$ "
+#       fi
+###
 
 # end if in "script"
 if pstree -s $PPID | grep -qP "\bscript\b" ; then exit 0 ; fi
@@ -21,8 +30,4 @@ yes_or_no() {
     done
 }
 
-RED=$(tput setaf 9)
-GRN=$(tput setaf 2)
-NC=$(tput sgr0)
-PROMPT="[${RED}** ${GRN}\\u${NC}@\\h \\W]\\$ "
-yes_or_no "${RED}Log this session?${NC}" && ( script -f ${LOG_FOLDER}/log_`date +'%Y%m%d_%H%M%S.%N'`.txt -c "source ~/.bashrc; env PS1='${PROMPT}' /bin/bash --norc" )
+yes_or_no "${RED}Log this session?${NC}" && ( script -f ${LOG_FOLDER}/log_`date +'%Y%m%d_%H%M%S.%N'`.txt )

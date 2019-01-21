@@ -3,6 +3,16 @@
 LOG_FOLDER=/pentest/_clients/__logs/
 CONSOLE=terminator
 
+###
+# optional step. Update ~/.bashrc with this before the call to the logger script to update your prompt
+#       if pstree -s $PPID | grep -qP "\-script\b" ; then
+#               RED=$(tput setaf 9)
+#               GRN=$(tput setaf 2)
+#               NC=$(tput sgr0)
+#               export PS1="[\[${RED}\]** \[${GRN}\]\\u\[${NC}\]@\\h \\W]\\$ "
+#       fi
+###
+
 yes_or_no() {
     while true; do
         read -p "$* [Y/n]: " yn
@@ -26,18 +36,13 @@ yes_or_no_or_terminal() {
     done
 }
 
-RED=$(tput setaf 9)
-GRN=$(tput setaf 2)
-NC=$(tput sgr0)
-PROMPT="[\[${RED}\]** \[${GRN}\]\\u\[${NC}\]@\\h \\W]\\$ "
-
 if pstree -s $PPID | grep -qP "\-script\b" ; then 
 	# already logging, do nothing
 	exit 0
 
 elif pstree -s $PPID | grep -qP "\-${CONSOLE}\b" ; then
 	# inside terminal, prompt to log or not
-	yes_or_no "${RED}Log this session?${NC}" && ( script -f ${LOG_FOLDER}/log_`date +'%Y%m%d_%H%M%S.%N'`.txt -c "source ~/.bashrc; env PS1='${PROMPT}' /bin/bash --norc" )
+	yes_or_no "${RED}Log this session?${NC}" && ( script -f ${LOG_FOLDER}/log_`date +'%Y%m%d_%H%M%S.%N'`.txt )
 
 else
 	# inside a regular shell, prompt to launch tmux/terminator or log.
@@ -50,7 +55,7 @@ else
 		sleep 1
 		kill -9 $PPID
 	elif [ $ret -eq 0 ] ; then
-		script -f ${LOG_FOLDER}/log_`date +'%Y%m%d_%H%M%S.%N'`.txt -c "source ~/.bashrc; env PS1='${PROMPT}' /bin/bash --norc" 
+		script -f ${LOG_FOLDER}/log_`date +'%Y%m%d_%H%M%S.%N'`.txt 
 	fi
 fi
 
